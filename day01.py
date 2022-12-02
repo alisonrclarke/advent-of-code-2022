@@ -3,9 +3,9 @@ import sys
 import utils
 
 test_mode = len(sys.argv) > 1
-input_file = f'day01_test_input.txt' if test_mode else f'day01_input.txt'
-data = utils.input_as_lines(input_file) 
-data.append("") # Add new line at end to make sure we count the last sections
+input_file = f"day01_test_input.txt" if test_mode else f"day01_input.txt"
+data = utils.input_as_lines(input_file)
+data.append("")  # Add new line at end to make sure we count the last sections
 
 # Part 1
 max_calories = 0
@@ -23,7 +23,7 @@ print(f"Part 1: {max_calories}")
 
 
 # Part 2
-max_calories = [0, 0, 0] # Will be kept in descending order
+max_calories = [0, 0, 0]  # Will be kept in descending order
 current_calories = 0
 
 for line in data:
