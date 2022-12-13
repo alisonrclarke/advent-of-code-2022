@@ -25,6 +25,6 @@ input_file = f"day{day:02}_input.txt"
 if not os.path.exists(input_file):
     open(input_file, "w").close()
 
-test_input_file = f"day{day:02}_input.txt"
+test_input_file = f"day{day:02}_test_input.txt"
 if not os.path.exists(test_input_file):
     open(test_input_file, "w").close()
