@@ -1,4 +1,5 @@
 import cmath
+from collections import defaultdict
 import sys
 
 import utils
@@ -19,6 +20,8 @@ class Rock:
         self.positions = set([s + self.pos for s in self.shape])
         x_positions = [s.real for s in shape]
         self.width = max(*x_positions) - min(*x_positions) + 1
+        y_positions = [s.imag for s in shape]
+        self.height = max(*y_positions) - min(*y_positions) + 1
 
     def left(self, filled_positions, top_row_number):
         can_move = self.pos.real > 0
@@ -163,11 +166,12 @@ print(f"Part 1: {top_row_number + 1}")
 #         indices = pattern_search(pattern_row, remaining_rows[1:])
 
 def find_rows_filled(n_rocks, stop_at_height=None):
-    base = 0
+    # base = 0
     top_row_number = -1
     shape_index = 0
     step = 0
     filled_positions = set()
+    last_rock_at_height = {} # defaultdict(list)
 
     for i in range(n_rocks):
         rock = Rock(rock_shapes[shape_index % len(rock_shapes)], top_row_number)
@@ -245,22 +249,42 @@ def find_rows_filled(n_rocks, stop_at_height=None):
             
             if found_pattern:
                 # Something wrong in logic here - number of rocks dropped or n_repeats
-                new_limit = n_rocks % pattern_index
-                rocks_dropped_to_pattern, _ = find_rows_filled(i, stop_at_height=pattern_index)
+                breakpoint()
+                print([last_rock_at_height.get(k, -1) for k in range(pattern_index)])
+                rocks_dropped_to_pattern = max([last_rock_at_height.get(k, -1) for k in range(pattern_index)])
+
+                # rocks_dropped_to_pattern, _ = find_rows_filled(i, stop_at_height=pattern_index)
                 print("rocks dropped to pattern", rocks_dropped_to_pattern)
                 n_repeats = n_rocks // rocks_dropped_to_pattern
+                print("repeats", n_repeats)
                 new_limit = n_rocks % rocks_dropped_to_pattern
                 print("new limit", new_limit)
+                print(n_repeats * rocks_dropped_to_pattern)
+                print(n_repeats * rocks_dropped_to_pattern + new_limit)
                 return n_repeats * pattern_index + find_rows_filled(new_limit)
 
-        if i % 10000 == 0:
-            print(i, len(filled_positions))
+        # if i % 10000 == 0:
+        #     print(i, len(filled_positions))
+        
+        print_grid(filled_positions, top_row_number, rock)
 
-        if stop_at_height and top_row_number > stop_at_height:
-            return i-1, top_row_number
-            
+        for p in rock.positions:
+            last_rock_at_height[p.imag + 1] = i + 1 # Last rock that landed at this height
+        
+        # if stop_at_height and top_row_number > stop_at_height + 4: # Make sure top row is filled in
+        #     return heights_to_rocks[stop_at_height]
+
+    breakpoint()        
     return top_row_number + 1
 
-rows_filled = find_rows_filled(1000000000000)
 
-print(f"Part 2: {rows_filled}")
+# rows_filled = find_rows_filled(1000000000000)
+# print(f"Part 2: {rows_filled}")
+
+print(find_rows_filled(32))
+
+# rows_filled = find_rows_filled(1736) # = 2627.0
+# rows_filled = find_rows_filled(1737) # = 2627.0
+# rows_filled = find_rows_filled(1594)
+
+
